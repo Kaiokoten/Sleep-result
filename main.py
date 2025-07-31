@@ -153,8 +153,8 @@ import streamlit as st
 # 💡 Пример данных — можешь подгрузить свои или заменить CSV
 data = {
     "weekday_sleep": ["5시간 이하", "6시간", "7시간", "8시간 이상"] * 40,
-    "stress_level": [9, 8, 6, 3] * 40,
-    "tired_morning": [9, 8, 5, 2] * 40,
+    "stress_level": [5, 4, 2, 1] * 40,
+    "tired_morning": [7, 6, 3, 2] * 40,
 }
 df = pd.DataFrame(data)
 
