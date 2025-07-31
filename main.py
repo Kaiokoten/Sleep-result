@@ -221,6 +221,12 @@ total_by_sleep = df['weekday_sleep'].value_counts().reset_index()
 total_by_sleep.columns = ['weekday_sleep', 'total']
 insomnia_by_sleep = pd.merge(insomnia_by_sleep, total_by_sleep, on='weekday_sleep')
 insomnia_by_sleep['percent'] = (insomnia_by_sleep['count'] / insomnia_by_sleep['total'] * 100).round(1)
+data = {
+    "weekday_sleep": ["5시간 이하", "6시간", "7시간", "8시간 이상"] * 40,
+    "stress_level": [5, 4, 2, 1] * 40,
+    "tired_morning": [7, 6, 3, 2] * 40,
+    "insomnia": ["예", "예", "아니오", "아니오"] * 40
+}
 
 # 시각화
 fig_insomnia_bar = px.bar(
