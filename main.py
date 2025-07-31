@@ -1,6 +1,12 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+data = {
+    "weekday_sleep": ["5시간 이하", "6시간", "7시간", "8시간 이상"] * 40,
+    "stress_level": [5, 4, 2, 1] * 40,
+    "tired_morning": [7, 6, 3, 2] * 40,
+    "insomnia": ["예", "예", "아니오", "아니오"] * 40
+}
 
 st.set_page_config(
     page_title="🛌 수면 & 스트레스 설문 분석",
