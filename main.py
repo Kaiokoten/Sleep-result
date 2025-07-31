@@ -146,51 +146,63 @@ st.markdown("---")
 
 st.markdown("### 📢 본 대시보드는 Streamlit과 Plotly 라이브러리를 활용하여 제작되었습니다.")
 
-# 수면 시간별 평균 스트레스 수준
-st.markdown("## 😣 수면 시간에 따른 평균 스트레스 수준")
-sleep_stress = df.groupby('weekday_sleep')['stress_level'].mean().reset_index()
-fig_sleep_stress = px.bar(
-    sleep_stress,
-    x='weekday_sleep',
-    y='stress_level',
-    title='수면 시간별 평균 스트레스 수준',
-    labels={'weekday_sleep': '평일 수면 시간', 'stress_level': '평균 스트레스'},
-    color='stress_level',
-    color_continuous_scale='RdBu_r',
-    text=sleep_stress['stress_level'].round(2)
-)
-fig_sleep_stress.update_traces(textposition='outside')
-fig_sleep_stress.update_layout(margin=dict(t=50, b=20, l=40, r=20))
-st.plotly_chart(fig_sleep_stress, use_container_width=True)
+import plotly.express as px
+import pandas as pd
+import streamlit as st
 
-# 수면 시간별 아침 피로감 평균
-st.markdown("## 😴 수면 시간에 따른 아침 피로감 평균")
-sleep_tired = df.groupby('weekday_sleep')['tired_morning'].mean().reset_index()
-fig_sleep_tired = px.bar(
-    sleep_tired,
-    x='weekday_sleep',
-    y='tired_morning',
-    title='수면 시간별 아침 피로감 수준',
-    labels={'weekday_sleep': '평일 수면 시간', 'tired_morning': '평균 피로감'},
-    color='tired_morning',
-    color_continuous_scale='Tealgrn',
-    text=sleep_tired['tired_morning'].round(2)
-)
-fig_sleep_tired.update_traces(textposition='outside')
-fig_sleep_tired.update_layout(margin=dict(t=50, b=20, l=40, r=20))
-st.plotly_chart(fig_sleep_tired, use_container_width=True)
+# 💡 Пример данных — можешь подгрузить свои или заменить CSV
+data = {
+    "weekday_sleep": ["5시간 이하", "6시간", "7시간", "8시간 이상"] * 40,
+    "stress_level": [9, 8, 6, 3] * 40,
+    "tired_morning": [9, 8, 5, 2] * 40,
+}
+df = pd.DataFrame(data)
 
-# 수면 시간별 스트레스와 피로감 평균 비교
-st.markdown("## 📊 수면 시간별 스트레스와 피로감 비교")
-sleep_summary = df.groupby('weekday_sleep')[['stress_level', 'tired_morning']].mean().reset_index()
-fig_sleep_compare = px.bar(
-    sleep_summary.melt(id_vars='weekday_sleep', var_name='항목', value_name='수치'),
-    x='weekday_sleep',
-    y='수치',
-    color='항목',
-    barmode='group',
-    title='수면 시간에 따른 평균 스트레스 및 피로감',
-    labels={'weekday_sleep': '수면 시간', '수치': '평균 수치'}
+st.title("🛌 수면 시간과 스트레스/피로감 관계 분석")
+
+# 1️⃣ 스트레스 수준 vs 수면 시간
+st.markdown("## 1. 수면 시간에 따른 스트레스 수준")
+stress_sleep = df.groupby("weekday_sleep")["stress_level"].mean().reset_index()
+fig_stress = px.bar(
+    stress_sleep,
+    x="weekday_sleep",
+    y="stress_level",
+    title="수면 시간에 따른 평균 스트레스 수준",
+    labels={"weekday_sleep": "수면 시간", "stress_level": "스트레스 수준"},
+    color="stress_level",
+    color_continuous_scale="Reds",
+    text=stress_sleep["stress_level"].round(2)
 )
-fig_sleep_compare.update_layout(margin=dict(t=50, b=20, l=40, r=20))
-st.plotly_chart(fig_sleep_compare, use_container_width=True)
+fig_stress.update_traces(textposition="outside")
+st.plotly_chart(fig_stress, use_container_width=True)
+
+# 2️⃣ 피로감 vs 수면 시간
+st.markdown("## 2. 수면 시간에 따른 아침 피로감")
+tired_sleep = df.groupby("weekday_sleep")["tired_morning"].mean().reset_index()
+fig_tired = px.bar(
+    tired_sleep,
+    x="weekday_sleep",
+    y="tired_morning",
+    title="수면 시간에 따른 평균 아침 피로감",
+    labels={"weekday_sleep": "수면 시간", "tired_morning": "피로감"},
+    color="tired_morning",
+    color_continuous_scale="Blues",
+    text=tired_sleep["tired_morning"].round(2)
+)
+fig_tired.update_traces(textposition="outside")
+st.plotly_chart(fig_tired, use_container_width=True)
+
+# 3️⃣ 스트레스와 피로감의 상관관계 (산점도)
+st.markdown("## 3. 스트레스와 아침 피로감의 관계")
+fig_scatter = px.scatter(
+    df,
+    x="stress_level",
+    y="tired_morning",
+    color="weekday_sleep",
+    title="스트레스 수준과 아침 피로감의 상관관계",
+    labels={"stress_level": "스트레스 수준", "tired_morning": "아침 피로감"},
+    size_max=15,
+)
+fig_scatter.update_layout(margin=dict(t=50, b=30))
+st.plotly_chart(fig_scatter, use_container_width=True)
+
