@@ -206,3 +206,36 @@ fig_scatter = px.scatter(
 fig_scatter.update_layout(margin=dict(t=50, b=30))
 st.plotly_chart(fig_scatter, use_container_width=True)
 
+# --- 수면 시간에 따른 불면증 경험 비율 Bar Chart ---
+st.markdown("## 😵 수면 시간에 따른 불면증 경험 비율")
+
+# 데이터 준비
+insomnia_by_sleep = df.groupby(['weekday_sleep', 'insomnia']).size().reset_index(name='count')
+total_by_sleep = df['weekday_sleep'].value_counts().reset_index()
+total_by_sleep.columns = ['weekday_sleep', 'total']
+insomnia_by_sleep = pd.merge(insomnia_by_sleep, total_by_sleep, on='weekday_sleep')
+insomnia_by_sleep['percent'] = (insomnia_by_sleep['count'] / insomnia_by_sleep['total'] * 100).round(1)
+
+# 시각화
+fig_insomnia_bar = px.bar(
+    insomnia_by_sleep,
+    x='weekday_sleep',
+    y='percent',
+    color='insomnia',
+    barmode='group',
+    text='percent',
+    labels={
+        'weekday_sleep': '평일 평균 수면 시간',
+        'percent': '비율 (%)',
+        'insomnia': '불면증 경험 여부'
+    },
+    title="수면 시간에 따른 불면증 경험 여부",
+    color_discrete_sequence=px.colors.qualitative.Set2,
+)
+fig_insomnia_bar.update_layout(
+    margin=dict(t=50, b=20, l=40, r=20),
+    yaxis_range=[0, 100]
+)
+fig_insomnia_bar.update_traces(textposition='outside')
+st.plotly_chart(fig_insomnia_bar, use_container_width=True)
+
