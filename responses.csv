@@ -1,4 +1,10 @@
 ﻿timestamp,age,weekday_sleep,weekend_sleep,tired_morning,insomnia,stress_level,physical_activity
+data = {
+    "weekday_sleep": ["5시간 이하", "6시간", "7시간", "8시간 이상"] * 40,
+    "stress_level": [5, 4, 2, 1] * 40,
+    "tired_morning": [7, 6, 3, 2] * 40,
+    "insomnia": ["예", "예", "아니오", "아니오"] * 40
+}
 2025-07-19 19:23:07,20–29,4–6시간,<4시간,전혀 없다,예,8,아니오
 2025-07-19 19:23:07,20–29,6–8시간,6–8시간,가끔 그렇다,아니오,7,아니오
 2025-07-19 19:23:07,30–39,4–6시간,6–8시간,가끔 그렇다,예,7,예
